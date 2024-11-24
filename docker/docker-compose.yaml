@@ -1,0 +1,26 @@
+version: '3.8'
+services:
+  client:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.client
+    ports:
+      - "5000:5000"
+    depends_on:
+      - server
+
+  server:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.server
+    ports:
+      - "5001:5001"
+    depends_on:
+      - mongodb
+
+  mongodb:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.mongodb
+    ports:
+      - "27017:27017"

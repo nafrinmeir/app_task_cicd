@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: task-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: task-app
+  template:
+    metadata:
+      labels:
+        app: task-app
+    spec:
+      containers:
+      - name: client
+        image: client:latest
+        ports:
+        - containerPort: 5000
+      - name: server
+        image: server:latest
+        ports:
+        - containerPort: 5001
+      - name: mongodb
+        image: mongo:5.0
+        ports:
+        - containerPort: 27017
