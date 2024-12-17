@@ -1,7 +1,13 @@
 pipeline {
-    agent any
+    agent { 
+        node {
+            label 'meirpc'
+            label 'built-in' 
+        }
+    }
     stages {
         stage('Build Docker Images') {
+            agent { label 'meirpc' }
             steps {
                 sh 'docker build -t client:latest -f docker/Dockerfile.client .'
                 sh 'docker build -t server:latest -f docker/Dockerfile.server .'
@@ -9,6 +15,7 @@ pipeline {
             }
         }
         stage('Push Images') {
+            agent { label 'meirpc' }
             steps {
                 withCredentials([string(credentialsId: 'dockerhub-password', variable: 'DOCKER_PASSWORD')]) {
                     sh 'echo $DOCKER_PASSWORD | docker login -u myusername --password-stdin'
@@ -20,6 +27,7 @@ pipeline {
             }
         }
         stage('Deploy to Kubernetes') {
+            agent { label 'meirpc' }
             steps {
                 sh 'kubectl apply -f k8s/deployment.yaml'
             }
